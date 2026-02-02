@@ -1,11 +1,56 @@
 version: '3.8'
 
 services:
+  # SQL Server Database
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: minebea_auth_db
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=MicAdmin123!
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - db_data:/var/opt/mssql
+    networks:
+      - auth_network
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "MicAdmin123!" -Q "SELECT 1" -C || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+    restart: unless-stopped
+
+  # Auth Service Application
   auth-service:
     build: .
     container_name: minebea-auth-service
     ports:
       - "6200:6200"
-    env_file:
-      - .env
-    restart: always
+    environment:
+      - DB_HOST=db
+      - DB_USER=sa
+      - DB_PASS=MicAdmin123!
+      - DB_NAME=minebea_central_auth
+      - DB_DIALECT=mssql
+      - GOOGLE_CLIENT_ID=325425048581-rrn0koq2t5n4e3o13cf0pnej37eeiap8.apps.googleusercontent.com
+      - GOOGLE_ALLOWED_DOMAIN=minebea.co.th
+      - JWT_SECRET=minebea-central-secret-key-2026
+      - JWT_EXPIRES_IN=24h
+      - PORT=6200
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - auth_network
+    restart: unless-stopped
+
+volumes:
+  db_data:
+    driver: local
+
+networks:
+  auth_network:
+    driver: bridge
