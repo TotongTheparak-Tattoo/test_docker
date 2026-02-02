@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  auth-service:
+    build: .
+    container_name: minebea-auth-service
+    ports:
+      - "6200:6200"
+    env_file:
+      - .env
+    restart: always

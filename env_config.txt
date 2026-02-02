@@ -1,0 +1,17 @@
+# Database Configuration
+DB_HOST=localhost
+DB_USER=sa
+DB_PASS=your_password
+DB_NAME=minebea_central_auth
+DB_DIALECT=mssql
+
+# Google OAuth
+GOOGLE_CLIENT_ID=325425048581-rrn0koq2t5n4e3o13cf0pnej37eeiap8.apps.googleusercontent.com
+GOOGLE_ALLOWED_DOMAIN=minebea.co.th
+
+# JWT Configuration
+JWT_SECRET=minebea-central-secret-key-2026
+JWT_EXPIRES_IN=24h
+
+# Server
+PORT=6200
