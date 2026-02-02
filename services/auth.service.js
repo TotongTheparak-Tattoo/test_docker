@@ -1,7 +1,8 @@
 const { OAuth2Client } = require('google-auth-library');
-const User = require('../models/user.model');
+const { User } = require('../models');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const { Op } = require('sequelize');
 
 class AuthService {
   constructor() {
@@ -9,12 +10,12 @@ class AuthService {
   }
 
   async register(userData) {
-    const { emp_no, email, full_name, password } = userData;
+    const { empNo, email, fullName, password } = userData;
 
     // Check if user already exists
     const existingUser = await User.findOne({ 
       where: { 
-        [User.sequelize.Sequelize.Op.or]: [{ emp_no }, { email }] 
+        [Op.or]: [{ empNo }, { email }] 
       } 
     });
 
@@ -28,18 +29,18 @@ class AuthService {
 
     // Create user
     const user = await User.create({
-      emp_no,
+      empNo,
       email,
-      full_name,
+      fullName,
       password: hashedPassword,
-      signup_status: 'activate'
+      status: true
     });
 
     return user;
   }
 
-  async loginWithPassword(emp_no, password) {
-    const user = await User.findOne({ where: { emp_no } });
+  async loginWithPassword(empNo, password) {
+    const user = await User.findOne({ where: { empNo } });
     if (!user || !user.password) throw new Error('Invalid credentials');
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -52,10 +53,10 @@ class AuthService {
   generateToken(user) {
     return jwt.sign(
       { 
-        user_id: user.user_id, 
-        emp_no: user.emp_no, 
+        userId: user.userId, 
+        empNo: user.empNo, 
         email: user.email,
-        name: user.full_name 
+        fullName: user.fullName 
       },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN }

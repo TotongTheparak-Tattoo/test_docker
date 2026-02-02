@@ -1,45 +1,39 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db.config');
 
-const User = sequelize.define('User', {
-  userId: {
+const UserPermissionDetail = sequelize.define('UserPermissionDetail', {
+  userPermissionDetailId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
-    field: 'userId'
-  },
-  fullName: {
-    type: DataTypes.STRING(100),
-    allowNull: true,
-    field: 'fullName'
-  },
-  empNo: {
-    type: DataTypes.STRING(20),
-    allowNull: true,
-    field: 'empNo'
-  },
-  password: {
-    type: DataTypes.STRING(255),
-    allowNull: true,
-    field: 'password'
-  },
-  email: {
-    type: DataTypes.STRING(100),
-    allowNull: true,
-    field: 'email'
+    field: 'userPermissionDetailId'
   },
   status: {
     type: DataTypes.BOOLEAN,
     defaultValue: true,
     field: 'status'
   },
-  divisionId: {
+  lastLoginAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    field: 'lastLoginAt'
+  },
+  userId: {
     type: DataTypes.INTEGER,
     allowNull: true,
-    field: 'divisionId',
+    field: 'userId',
     references: {
-      model: 'Divisions',
-      key: 'divisionId'
+      model: 'Users',
+      key: 'userId'
+    }
+  },
+  permissionId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    field: 'permissionId',
+    references: {
+      model: 'Permissions',
+      key: 'permissionId'
     }
   },
   createdAt: {
@@ -55,8 +49,9 @@ const User = sequelize.define('User', {
     field: 'updatedAt'
   }
 }, {
-  tableName: 'Users',
+  tableName: 'UserPermissionDetails',
   timestamps: true
 });
 
-module.exports = User;
+module.exports = UserPermissionDetail;
+

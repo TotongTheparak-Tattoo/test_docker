@@ -3,16 +3,16 @@ const AuthService = require('../services/auth.service');
 class AuthController {
   async register(req, res) {
     try {
-      const { emp_no, email, full_name, password } = req.body;
-      const user = await AuthService.register({ emp_no, email, full_name, password });
+      const { empNo, email, fullName, password } = req.body;
+      const user = await AuthService.register({ empNo, email, fullName, password });
       
       res.status(201).json({
         success: true,
         message: 'User registered successfully',
         user: {
-          emp_no: user.emp_no,
+          empNo: user.empNo,
           email: user.email,
-          name: user.full_name
+          fullName: user.fullName
         }
       });
     } catch (error) {
@@ -22,17 +22,17 @@ class AuthController {
 
   async login(req, res) {
     try {
-      const { emp_no, password } = req.body;
-      const { token, user } = await AuthService.loginWithPassword(emp_no, password);
+      const { empNo, password } = req.body;
+      const { token, user } = await AuthService.loginWithPassword(empNo, password);
       
       res.json({
         success: true,
         token: token,
         user: {
-          emp_no: user.emp_no,
+          empNo: user.empNo,
           email: user.email,
-          name: user.full_name,
-          picture: user.profile_picture
+          fullName: user.fullName,
+          status: user.status
         }
       });
     } catch (error) {

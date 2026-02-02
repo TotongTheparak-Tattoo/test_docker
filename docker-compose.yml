@@ -7,7 +7,7 @@ services:
     container_name: minebea_auth_db
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=MicAdmin123!
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD:-MicAdmin123!}
       - MSSQL_PID=Express
     ports:
       - "1433:1433"
@@ -16,7 +16,7 @@ services:
     networks:
       - auth_network
     healthcheck:
-      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "MicAdmin123!" -Q "SELECT 1" -C || exit 1
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "${MSSQL_SA_PASSWORD:-MicAdmin123!}" -Q "SELECT 1" -C || exit 1
       interval: 10s
       timeout: 5s
       retries: 30
@@ -29,17 +29,8 @@ services:
     container_name: minebea-auth-service
     ports:
       - "6200:6200"
-    environment:
-      - DB_HOST=db
-      - DB_USER=sa
-      - DB_PASS=MicAdmin123!
-      - DB_NAME=minebea_central_auth
-      - DB_DIALECT=mssql
-      - GOOGLE_CLIENT_ID=325425048581-rrn0koq2t5n4e3o13cf0pnej37eeiap8.apps.googleusercontent.com
-      - GOOGLE_ALLOWED_DOMAIN=minebea.co.th
-      - JWT_SECRET=minebea-central-secret-key-2026
-      - JWT_EXPIRES_IN=24h
-      - PORT=6200
+    env_file:
+      - .env
     depends_on:
       db:
         condition: service_healthy

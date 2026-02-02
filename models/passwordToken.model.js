@@ -1,45 +1,35 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db.config');
 
-const User = sequelize.define('User', {
-  userId: {
+const PasswordToken = sequelize.define('PasswordToken', {
+  passwordTokenId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
-    field: 'userId'
+    field: 'passwordTokenId'
   },
-  fullName: {
-    type: DataTypes.STRING(100),
-    allowNull: true,
-    field: 'fullName'
-  },
-  empNo: {
-    type: DataTypes.STRING(20),
-    allowNull: true,
-    field: 'empNo'
-  },
-  password: {
+  tokenHash: {
     type: DataTypes.STRING(255),
     allowNull: true,
-    field: 'password'
+    field: 'tokenHash'
   },
-  email: {
-    type: DataTypes.STRING(100),
+  expireAt: {
+    type: DataTypes.DATE,
     allowNull: true,
-    field: 'email'
+    field: 'expireAt'
   },
-  status: {
+  used: {
     type: DataTypes.BOOLEAN,
-    defaultValue: true,
-    field: 'status'
+    defaultValue: false,
+    field: 'used'
   },
-  divisionId: {
+  userId: {
     type: DataTypes.INTEGER,
     allowNull: true,
-    field: 'divisionId',
+    field: 'userId',
     references: {
-      model: 'Divisions',
-      key: 'divisionId'
+      model: 'Users',
+      key: 'userId'
     }
   },
   createdAt: {
@@ -55,8 +45,9 @@ const User = sequelize.define('User', {
     field: 'updatedAt'
   }
 }, {
-  tableName: 'Users',
+  tableName: 'PasswordTokens',
   timestamps: true
 });
 
-module.exports = User;
+module.exports = PasswordToken;
+

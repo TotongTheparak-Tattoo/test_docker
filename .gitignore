@@ -1,0 +1,52 @@
+# Environment files
+.env
+.env.production
+.env.local
+.env.*.local
+
+# แต่ .env.development commit ได้ (สำหรับ dev team)
+!.env.development
+
+# Database
+*.mdf
+*.ldf
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Docker
+docker-compose.override.yml
+
+# Node modules
+node_modules/
+
+# Backup files
+backups/
+backup/
+*.bak
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Test files
+coverage/
+.nyc_output/
+
